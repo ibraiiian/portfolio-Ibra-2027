@@ -2,12 +2,12 @@ import { useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { FolderOpen, House, LayoutGrid, Mail, Terminal, UserRound, type LucideIcon } from 'lucide-react'
+import { FolderOpen, House, Mail, Terminal, UserRound, Workflow, type LucideIcon } from 'lucide-react'
 import ClickSpark from '@/components/ClickSpark'
 import Dock from '@/components/Dock'
 import { MenuBar, go } from '@/components/Mac'
 import { Hero } from '@/sections/Hero'
-import { About, Contact, Inside, Projects, Skills, Workflow } from '@/sections/Sections'
+import { About, Contact, Inside, Projects, Workflow as WorkflowSection } from '@/sections/Sections'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -21,7 +21,8 @@ const dock = [
   { icon: icon(House, '#5ac8fa', '#0a84ff'), label: 'Home', onClick: () => go('home') },
   { icon: icon(UserRound, '#c4b5fd', '#7c3aed'), label: 'About', onClick: () => go('about') },
   { icon: icon(FolderOpen, '#7dd3fc', '#2563eb'), label: 'Projects', onClick: () => go('projects') },
-  { icon: icon(LayoutGrid, '#fda4af', '#e11d48'), label: 'Skills', onClick: () => go('skills') },
+  // { icon: icon(LayoutGrid, '#fda4af', '#e11d48'), label: 'Skills', onClick: () => go('skills') },
+  { icon: icon(Workflow, '#fda4af', '#e11d48'), label: 'Workflow', onClick: () => go('workflow') },
   { icon: icon(Terminal, '#52525b', '#09090b'), label: 'Terminal', onClick: () => go('contact') },
   { icon: icon(Mail, '#6ee7b7', '#059669'), label: 'Contact', onClick: () => go('contact') },
 ]
@@ -53,8 +54,9 @@ export default function App() {
           <Inside />
           <About />
           <Projects />
-          <Skills />
-          <Workflow />
+          {/* Launchpad (Skills) disembunyikan dulu. Hapus komentar ini untuk menampilkannya lagi. */}
+          {/* <Skills /> */}
+          <WorkflowSection />
           <Contact />
         </main>
         <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 h-28 [&>*]:pointer-events-auto">

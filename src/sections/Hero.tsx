@@ -11,7 +11,8 @@ const CUTS = [0, 0.297, 0.4025, 0.5025, 0.578, 0.692, 0.785, 0.822, 1]
 const folders = [
   { label: 'About', id: 'about', pos: 'left-[12%] top-[15%]' },
   { label: 'Projects', id: 'projects', pos: 'right-[14%] top-[17%]' },
-  { label: 'Skills', id: 'skills', pos: 'left-[7%] bottom-[20%]', selected: true },
+  // { label: 'Skills', id: 'skills', pos: 'left-[7%] bottom-[20%]', selected: true }, // Launchpad disembunyikan
+  { label: 'Workflow', id: 'workflow', pos: 'left-[7%] bottom-[20%]', selected: true },
   { label: 'Contact', id: 'contact', pos: 'right-[9%] bottom-[22%]' },
 ]
 

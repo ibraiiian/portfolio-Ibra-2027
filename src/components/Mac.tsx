@@ -28,7 +28,7 @@ export function FolderIcon({ className = '' }: { className?: string }) {
 const menu = [
   ['About', 'about'],
   ['Projects', 'projects'],
-  ['Skills', 'skills'],
+  // ['Skills', 'skills'], // Launchpad disembunyikan
   ['Workflow', 'workflow'],
   ['Contact', 'contact'],
 ] as const
