@@ -16,12 +16,13 @@ const folders = [
   { label: 'Contact', id: 'contact', pos: 'right-[9%] bottom-[22%]' },
 ]
 
-export function Hero() {
+export function Hero({ start: ready = true }: { start?: boolean }) {
   const root = useRef<HTMLElement>(null)
   const dragged = useRef(false)
 
   useGSAP(
     () => {
+      if (!ready) return // tunggu sampai layar pembuka dilewati
       const q = gsap.utils.selector(root)
       const name = q('[data-name]')[0] as HTMLElement
       const cursor = q('[data-cursor]')[0] as HTMLElement
@@ -72,7 +73,7 @@ export function Hero() {
       window.addEventListener('pointermove', move)
       return () => window.removeEventListener('pointermove', move)
     },
-    { scope: root },
+    { scope: root, dependencies: [ready] },
   )
 
   return (

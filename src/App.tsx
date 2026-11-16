@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -7,6 +7,7 @@ import ClickSpark from '@/components/ClickSpark'
 import Dock from '@/components/Dock'
 import { MenuBar, go } from '@/components/Mac'
 import { Hero } from '@/sections/Hero'
+import { Intro } from '@/sections/Intro'
 import { About, Contact, Inside, Projects, Workflow as WorkflowSection } from '@/sections/Sections'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -29,6 +30,8 @@ const dock = [
 
 export default function App() {
   const root = useRef<HTMLDivElement>(null)
+  const [entered, setEntered] = useState(false)
+  const [intro, setIntro] = useState(true)
 
   useGSAP(
     () => {
@@ -48,9 +51,10 @@ export default function App() {
   return (
     <ClickSpark sparkColor="#2f6fed" sparkCount={10} sparkRadius={22}>
       <div ref={root} className="relative isolate">
+        {intro && <Intro onEnter={() => setEntered(true)} onGone={() => setIntro(false)} />}
         <MenuBar />
         <main>
-          <Hero />
+          <Hero start={entered} />
           <Inside />
           <About />
           <Projects />
