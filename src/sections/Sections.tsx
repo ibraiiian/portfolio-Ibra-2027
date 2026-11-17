@@ -122,45 +122,49 @@ const stackPhotos = ['easy', 'what', 'no-way', 'nap-time', 'lets-go']
 
 export function About() {
   return (
-    <section id="about" className="relative py-28">
+    <section id="about" className="relative px-4 py-28">
       <Blobs />
-      <div className="mx-auto grid max-w-6xl gap-5 px-4 md:grid-cols-12">
-        {/* photo stack widget */}
-        <div data-reveal className="glass flex flex-col items-center rounded-[30px] p-6 md:col-span-4">
-          <p className="mb-5 self-start text-[13px] font-semibold text-neutral-500">Photos · drag or click</p>
-          <div className="my-auto h-[300px] w-[220px] sm:h-[340px] sm:w-[250px]">
-            <Stack
-              cards={stackPhotos.map(n => (
-                <img key={n} src={`/photos/${n}.jpg`} alt={n} />
-              ))}
-              layout="pile"
-              radius={22}
-              frame={8}
-              frameColor="#ffffff"
-              sendToBackOnClick
-              autoplay
-              autoplayDelay={3500}
-              pauseOnHover
-            />
-          </div>
-          <p className={`${display} mt-6 text-lg font-semibold`}>{profile.name}</p>
-          <p className="flex items-center gap-1 text-[13px] text-neutral-500">
-            <MapPin className="size-3.5" /> {profile.location}
-          </p>
-        </div>
+      <div data-reveal className="mx-auto max-w-6xl">
+        <Window title="about-me.md">
+          <div className="grid items-center gap-10 p-6 sm:p-10 md:grid-cols-[280px_1fr] md:gap-14">
+            {/* photo stack */}
+            <div className="flex flex-col items-center">
+              <div className="h-[300px] w-[220px] sm:h-[330px] sm:w-[240px]">
+                <Stack
+                  cards={stackPhotos.map(n => (
+                    <img key={n} src={`/photos/${n}.jpg`} alt={n} />
+                  ))}
+                  layout="pile"
+                  radius={22}
+                  frame={8}
+                  frameColor="#ffffff"
+                  sendToBackOnClick
+                  autoplay
+                  autoplayDelay={3500}
+                  pauseOnHover
+                />
+              </div>
+              <p className={`${display} mt-6 text-lg font-semibold`}>{profile.name}</p>
+              <p className="flex items-center gap-1 text-[13px] text-neutral-500">
+                <MapPin className="size-3.5" /> {profile.location}
+              </p>
+            </div>
 
-        {/* bio window */}
-        <div data-reveal className="md:col-span-8">
-          <Window title="about-me.md" className="h-full">
-            <div className="p-6 sm:p-10">
-              <h2 className={`${display} flex flex-wrap items-center gap-x-3 gap-y-2 text-[clamp(1.9rem,4.4vw,3.4rem)] font-semibold leading-tight tracking-tight`}>
+            {/* intro */}
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/60 px-3 py-1 text-[13px] font-medium text-neutral-700">
+                <i className="size-2 animate-pulse rounded-full bg-emerald-500" /> Open to work & collaborations
+              </span>
+              <h2 className={`${display} mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[clamp(1.9rem,4.4vw,3.4rem)] font-semibold leading-tight tracking-tight`}>
                 I build
                 <RotatingText
                   texts={profile.builds}
                   effect="slide"
+                  highlight
+                  highlightColor="#1d1d1f"
                   rotationInterval={2200}
                   staggerDuration={0.02}
-                  mainClassName="overflow-hidden rounded-2xl bg-[#1d1d1f] px-4 py-1 text-white"
+                  mainClassName="!rounded-2xl"
                 />
               </h2>
               <ScrollReveal
@@ -169,32 +173,27 @@ export function About() {
                 splitBy="words"
                 enableBlur
                 baseOpacity={0.12}
-                containerClassName="mt-7"
-                textClassName="text-[clamp(1.15rem,2vw,1.6rem)] font-medium leading-snug text-neutral-800"
+                containerClassName="mt-6"
+                textClassName="!text-[clamp(1.05rem,1.5vw,1.3rem)] !font-medium !leading-relaxed text-neutral-800"
               >
                 {profile.bio.join(' ')}
               </ScrollReveal>
             </div>
-          </Window>
-        </div>
-
-        {/* stat widgets */}
-        {profile.stats.map(s => (
-          <div key={s.label} data-reveal className="glass rounded-[26px] px-6 py-5 md:col-span-3">
-            <div className={`${display} text-5xl font-semibold tabular-nums`}>
-              <CountUp to={s.value} suffix={s.suffix} duration={1.6} />
-            </div>
-            <div className="mt-1 text-[13px] font-medium text-neutral-500">{s.label}</div>
           </div>
-        ))}
-        <div data-reveal className="glass-dark flex flex-col justify-between rounded-[26px] px-6 py-5 text-white md:col-span-3">
-          <span className="flex items-center gap-2 text-[13px] font-medium text-white/70">
-            <i className="size-2 animate-pulse rounded-full bg-emerald-400" /> Status
-          </span>
-          <span className={`${display} mt-3 text-xl font-semibold leading-tight`}>Open to work & collaborations</span>
-        </div>
-      </div>
 
+          {/* stats */}
+          <div className="grid grid-cols-3 divide-x divide-black/[.07] border-t border-black/[.07]">
+            {profile.stats.map(s => (
+              <div key={s.label} className="px-4 py-6 text-center sm:px-8 sm:text-left">
+                <div className={`${display} text-[clamp(2rem,4.5vw,3rem)] font-semibold leading-none tabular-nums`}>
+                  <CountUp to={s.value} suffix={s.suffix} duration={1.6} />
+                </div>
+                <div className="mt-2 text-[12px] font-medium text-neutral-500 sm:text-[13px]">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </Window>
+      </div>
     </section>
   )
 }
