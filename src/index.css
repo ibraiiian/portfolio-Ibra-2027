@@ -167,3 +167,10 @@ body { background: #f5f5f7; color: #1d1d1f; -webkit-font-smoothing: antialiased;
 }
 .pixelated { image-rendering: pixelated; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ---------- Bahy ---------- */
+@keyframes bahy-spin { to { transform: rotate(360deg); } }
+@keyframes bahy-ripple { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(1.75); opacity: 0; } }
+.bahy-spin { animation: bahy-spin 1.4s linear infinite; }
+.bahy-ripple { animation: bahy-ripple 1.6s cubic-bezier(.2,.6,.3,1) infinite; }
+@media (prefers-reduced-motion: reduce) { .bahy-spin, .bahy-ripple { animation: none; } }

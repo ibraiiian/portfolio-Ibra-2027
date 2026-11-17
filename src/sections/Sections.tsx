@@ -14,6 +14,7 @@ import ShinyText from '@/components/ShinyText'
 import SplitText from '@/components/SplitText'
 import CountUp from '@/components/CountUp'
 import AccordionGallery from '@/components/AccordionGallery'
+import { OPEN_PROJECT_EVENT } from '@/components/bahy/store'
 import { highlights, profile, projects, skills, workflow } from '@/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -311,6 +312,17 @@ function ProjectQuickLook({ index, onClose, onNavigate }: { index: number; onClo
 
 export function Projects() {
   const [open, setOpen] = useState<number | null>(null)
+
+  // Bahy bisa membuka project: scroll ke section ini lalu buka Quick Look
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const i = (e as CustomEvent<number>).detail
+      go('projects')
+      window.setTimeout(() => setOpen(i), 500)
+    }
+    window.addEventListener(OPEN_PROJECT_EVENT, onOpen)
+    return () => window.removeEventListener(OPEN_PROJECT_EVENT, onOpen)
+  }, [])
   return (
     <section id="projects" className="relative px-4 py-24">
       <Blobs />

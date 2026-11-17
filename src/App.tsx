@@ -6,6 +6,7 @@ import { FolderOpen, House, Mail, Terminal, UserRound, Workflow, type LucideIcon
 import ClickSpark from '@/components/ClickSpark'
 import Dock from '@/components/Dock'
 import { MenuBar, go } from '@/components/Mac'
+import { Bahy } from '@/components/bahy/Bahy'
 import { Hero } from '@/sections/Hero'
 import { Intro } from '@/sections/Intro'
 import { About, Contact, Inside, Projects, Workflow as WorkflowSection } from '@/sections/Sections'
@@ -53,6 +54,7 @@ export default function App() {
       <div ref={root} className="relative isolate">
         {intro && <Intro onEnter={() => setEntered(true)} onGone={() => setIntro(false)} />}
         <MenuBar />
+        <Bahy />
         <main>
           <Hero start={entered} />
           <Inside />

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Command, Search, Wifi, BatteryMedium } from 'lucide-react'
+import { BahyTrigger } from '@/components/bahy/Bahy'
 
 export const go = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
@@ -57,6 +58,7 @@ export function MenuBar() {
           </button>
         ))}
         <div className="ml-auto flex items-center gap-3 text-neutral-700">
+          <BahyTrigger />
           <BatteryMedium className="hidden size-4 sm:block" />
           <Wifi className="hidden size-3.5 sm:block" />
           <Search className="hidden size-3.5 sm:block" />
