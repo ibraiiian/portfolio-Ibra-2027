@@ -1,9 +1,9 @@
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { AnimatePresence, motion } from 'motion/react'
-import { ArrowUpRight, MapPin } from 'lucide-react'
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight, MapPin, X } from 'lucide-react'
 import { Blobs, FolderIcon, Window, go } from '@/components/Mac'
 import Folder from '@/components/Folder'
 import Stack from '@/components/Stack'
@@ -13,35 +13,12 @@ import TiltedCard from '@/components/TiltedCard'
 import ShinyText from '@/components/ShinyText'
 import SplitText from '@/components/SplitText'
 import CountUp from '@/components/CountUp'
-import SpotlightCard from '@/components/SpotlightCard'
-import { highlights, profile, projects, skills, workflow, type Project } from '@/data'
+import AccordionGallery from '@/components/AccordionGallery'
+import { highlights, profile, projects, skills, workflow } from '@/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const display = 'font-[family-name:var(--font-display)]'
-
-function Art({ p, className = '' }: { p: Project; className?: string }) {
-  return (
-    <div className={`relative overflow-hidden ${className}`} style={{ background: `linear-gradient(135deg, ${p.colors[0]}, ${p.colors[1]})` }}>
-      <div className="absolute -right-6 -top-10 size-40 rounded-full bg-white/25 blur-2xl" />
-      <div className="absolute inset-x-4 bottom-0 top-8 rounded-t-xl bg-white/90 p-3 shadow-xl">
-        <div className="mb-2 flex gap-1">
-          <i className="size-1.5 rounded-full bg-[#ff5f57]" />
-          <i className="size-1.5 rounded-full bg-[#febc2e]" />
-          <i className="size-1.5 rounded-full bg-[#28c840]" />
-        </div>
-        <div className="h-2 w-1/2 rounded-full" style={{ background: p.colors[0] }} />
-        <div className="mt-2 h-1.5 w-4/5 rounded-full bg-neutral-200" />
-        <div className="mt-1.5 h-1.5 w-3/5 rounded-full bg-neutral-200" />
-        <div className="mt-3 grid grid-cols-3 gap-1.5">
-          <div className="h-8 rounded-md bg-neutral-100" />
-          <div className="h-8 rounded-md opacity-70" style={{ background: p.colors[1] }} />
-          <div className="h-8 rounded-md bg-neutral-100" />
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const folderItems = [
   { image: '/photos/lets-go.jpg', title: "Let's go!" },
@@ -222,67 +199,151 @@ export function About() {
   )
 }
 
-/* ============ PROJECTS (Finder) ============ */
-const cats = ['All', 'Web', 'Mobile', 'Backend'] as const
+/* ============ PROJECTS (Accordion Gallery + Quick Look) ============ */
+function ProjectQuickLook({ index, onClose, onNavigate }: { index: number; onClose: () => void; onNavigate: (i: number) => void }) {
+  const p = projects[index]
+  const total = projects.length
+  const step = (d: number) => onNavigate((index + d + total) % total)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowRight') step(1)
+      if (e.key === 'ArrowLeft') step(-1)
+    }
+    window.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
+  })
+
+  return (
+    <motion.div className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <button aria-label="Close" onClick={onClose} className="absolute inset-0 cursor-default bg-black/25 backdrop-blur-md" />
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={p.title}
+        initial={{ opacity: 0, scale: 0.92, y: 24, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, scale: 0.95, y: 16, filter: 'blur(6px)' }}
+        transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+        className="relative flex max-h-[92svh] w-full max-w-5xl flex-col overflow-hidden rounded-[28px] border border-white/70 bg-white/90 shadow-[0_40px_120px_-30px_rgba(0,0,0,.55)] backdrop-blur-2xl"
+      >
+        {/* title bar */}
+        <div className="relative flex h-11 shrink-0 items-center gap-2 border-b border-black/5 px-4">
+          <button onClick={onClose} aria-label="Close" className="group grid size-3 place-items-center rounded-full bg-[#ff5f57] shadow-[inset_0_0_0_.5px_rgba(0,0,0,.15)]">
+            <X className="size-2 text-black/60 opacity-0 transition group-hover:opacity-100" strokeWidth={3} />
+          </button>
+          <span className="size-3 rounded-full bg-[#febc2e] shadow-[inset_0_0_0_.5px_rgba(0,0,0,.15)]" />
+          <span className="size-3 rounded-full bg-[#28c840] shadow-[inset_0_0_0_.5px_rgba(0,0,0,.15)]" />
+          <span className="pointer-events-none absolute inset-x-0 text-center text-[13px] font-semibold text-neutral-600">{p.title} · Quick Look</span>
+          <span className="ml-auto text-[12px] font-medium tabular-nums text-neutral-400">
+            {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
+        </div>
+
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={p.title}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[1.15fr_1fr] md:overflow-hidden"
+          >
+            <div className="relative aspect-[4/3] bg-neutral-200 md:aspect-auto md:h-full">
+              <img src={p.image} alt={`${p.title} screenshot`} className="absolute inset-0 size-full object-cover" />
+            </div>
+
+            <div className="flex flex-col p-6 sm:p-9 md:overflow-y-auto">
+              <div className="flex flex-wrap items-center gap-2 text-[12px] font-semibold">
+                <span className="rounded-full bg-[#1d1d1f] px-3 py-1 text-white">{p.type}</span>
+                <span className="rounded-full bg-black/[.06] px-3 py-1 tabular-nums text-neutral-600">{p.year}</span>
+              </div>
+              <h3 className={`${display} mt-4 text-[clamp(2rem,4vw,2.9rem)] font-semibold leading-none tracking-tight`}>{p.title}</h3>
+              <p className="mt-4 text-[16px] leading-relaxed text-neutral-600">{p.summary}</p>
+
+              <p className="mt-7 text-[12px] font-semibold uppercase tracking-[0.18em] text-neutral-400">Highlights</p>
+              <ul className="mt-3 space-y-2.5">
+                {p.features.map(f => (
+                  <li key={f} className="flex items-start gap-2.5 text-[15px] text-neutral-800">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-[#3d8bff] text-white">
+                      <Check className="size-3" strokeWidth={3} />
+                    </span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-6 flex flex-wrap gap-1.5">
+                {p.tags.map(t => (
+                  <span key={t} className="rounded-full border border-black/10 px-2.5 py-1 text-[12px] font-medium text-neutral-600">
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-auto flex items-center gap-2 pt-8">
+                {p.href && (
+                  <a href={p.href} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 rounded-full bg-[#1d1d1f] px-5 py-2.5 text-[14px] font-semibold text-white transition hover:bg-black">
+                    Visit project <ArrowUpRight className="size-4" />
+                  </a>
+                )}
+                <div className="ml-auto flex gap-2">
+                  <button onClick={() => step(-1)} aria-label="Previous project" className="grid size-10 place-items-center rounded-full border border-black/10 transition hover:bg-black/5">
+                    <ChevronLeft className="size-4" />
+                  </button>
+                  <button onClick={() => step(1)} aria-label="Next project" className="grid size-10 place-items-center rounded-full border border-black/10 transition hover:bg-black/5">
+                    <ChevronRight className="size-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
+  )
+}
 
 export function Projects() {
-  const [cat, setCat] = useState<(typeof cats)[number]>('All')
-  const list = projects.filter(p => cat === 'All' || p.category === cat)
+  const [open, setOpen] = useState<number | null>(null)
   return (
-    <section id="projects" className="relative px-4 py-20">
+    <section id="projects" className="relative px-4 py-24">
       <Blobs />
-      <div data-reveal className="mx-auto max-w-6xl">
-        <Window title={`Projects · ${list.length} items`}>
-          <div className="grid md:grid-cols-[190px_1fr]">
-            <aside className="flex gap-1 overflow-x-auto border-black/5 p-3 md:flex-col md:border-r">
-              <p className="hidden px-2 pb-1 text-[11px] font-semibold text-neutral-400 md:block">Favorites</p>
-              {cats.map(c => (
-                <button key={c} onClick={() => setCat(c)} className="relative flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[14px] font-medium">
-                  {cat === c && <motion.span layoutId="cat" className="absolute inset-0 rounded-lg bg-black/[.08]" />}
-                  <FolderIcon className="relative w-5" />
-                  <span className="relative">{c}</span>
-                </button>
-              ))}
-            </aside>
-            <motion.div layout className="grid min-h-[420px] content-start gap-4 p-4 sm:grid-cols-2 sm:p-6 lg:grid-cols-3">
-              <AnimatePresence mode="popLayout">
-                {list.map(p => (
-                  <motion.a
-                    layout
-                    key={p.title}
-                    href={p.href ?? '#projects'}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.85 }}
-                    whileHover={{ y: -6 }}
-                    transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-                    className="group block"
-                  >
-                    <SpotlightCard theme="light" spotlightColor="rgba(0,0,0,.08)" className="!rounded-2xl !border-white/70 !bg-white/60 !p-0">
-                      <Art p={p} className="aspect-[16/10] w-full" />
-                      <div className="p-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className={`${display} text-[17px] font-semibold`}>{p.title}</h3>
-                          <ArrowUpRight className="size-4 text-neutral-400 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neutral-900" />
-                        </div>
-                        <p className="mt-1 text-[13px] leading-snug text-neutral-600">{p.desc}</p>
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {p.stack.map(s => (
-                            <span key={s} className="rounded-full bg-black/[.06] px-2 py-0.5 text-[11px] font-medium text-neutral-700">
-                              {s}
-                            </span>
-                          ))}
-                          <span className="ml-auto text-[11px] tabular-nums text-neutral-400">{p.year}</span>
-                        </div>
-                      </div>
-                    </SpotlightCard>
-                  </motion.a>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <div>
+              <ShinyText text="SELECTED WORK" color="#8e8e93" shineColor="#1d1d1f" speed={3} className="text-[13px] font-semibold tracking-[0.25em]" />
+            </div>
+            <SplitText tag="h2" text="Projects" textAlign="left" splitType="chars" delay={30} className={`${display} mt-1 text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-none tracking-tight`} />
           </div>
-        </Window>
+          <p className="max-w-xs text-[15px] text-neutral-600 sm:text-right">Hover to explore. Click a project to see what's inside.</p>
+        </div>
+
+        <div data-reveal className="glass rounded-[34px] p-2.5 sm:p-3.5">
+          <AccordionGallery
+            items={projects.map(p => ({ image: p.image, label: p.title, alt: `${p.title} screenshot` }))}
+            defaultIndex={2}
+            expandRatio={0.52}
+            trigger="hover"
+            height={540}
+            gap={10}
+            radius={24}
+            overlayColor="#000000"
+            accentColor="#ffffff"
+            hint="View project ↗"
+            onItemClick={(_, i) => setOpen(i)}
+          />
+        </div>
       </div>
+
+      <AnimatePresence>{open !== null && <ProjectQuickLook index={open} onClose={() => setOpen(null)} onNavigate={setOpen} />}</AnimatePresence>
     </section>
   )
 }

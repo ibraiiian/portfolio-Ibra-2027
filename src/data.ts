@@ -25,22 +25,62 @@ export const highlights = ['Clean, maintainable code', 'Interfaces that feel ali
 
 export type Project = {
   title: string
-  category: 'Web' | 'Mobile' | 'Backend'
+  type: string
   year: string
-  desc: string
-  stack: string[]
-  colors: [string, string]
-  href?: string
+  image: string
+  summary: string
+  features: string[]
+  tags: string[]
+  href?: string // link demo/live, isi kalau ada
 }
 
-// TODO: ganti dengan project asli
+// Deskripsi ditulis dari isi screenshot, sesuaikan dengan detail asli project kamu.
 export const projects: Project[] = [
-  { title: 'Commerce Dashboard', category: 'Web', year: '2026', desc: 'Realtime analytics dashboard for an online store, with role-based access.', stack: ['React', 'TypeScript', 'Tailwind'], colors: ['#5b8cff', '#8b5cf6'] },
-  { title: 'Internship Logbook', category: 'Web', year: '2026', desc: 'Daily activity logbook with supervisor review and export to spreadsheet.', stack: ['Next.js', 'PostgreSQL'], colors: ['#34d399', '#0ea5e9'] },
-  { title: 'Realtime Chat API', category: 'Backend', year: '2025', desc: 'WebSocket messaging service with presence, rooms and message history.', stack: ['Node.js', 'Redis', 'Docker'], colors: ['#f59e0b', '#ef4444'] },
-  { title: 'Parts Catalog', category: 'Mobile', year: '2025', desc: 'Mobile catalog to search spare parts by code, category and vehicle type.', stack: ['React Native', 'Expo'], colors: ['#f43f5e', '#fb923c'] },
-  { title: 'Auth Service', category: 'Backend', year: '2025', desc: 'Token-based authentication service with refresh rotation and audit logs.', stack: ['Go', 'PostgreSQL'], colors: ['#06b6d4', '#3b82f6'] },
-  { title: 'Portfolio OS', category: 'Web', year: '2026', desc: 'This website, a macOS-inspired desktop built with GSAP and Motion.', stack: ['React', 'GSAP', 'Motion'], colors: ['#a855f7', '#ec4899'] },
+  {
+    title: 'TB Karib',
+    type: 'E-commerce',
+    year: '2026',
+    image: '/projects/tb-karib.jpg',
+    summary: 'Online store for PD. Karib that brings a building materials shop online, so customers can browse and order cement, sand, bricks, paint and more from home.',
+    features: ['Product catalog grouped by category', 'Weekly featured products', 'Customer cart, sign up and login', 'Automatic stock management'],
+    tags: ['E-commerce', 'Catalog', 'Inventory'],
+  },
+  {
+    title: 'Yummyverse',
+    type: 'Recipe platform',
+    year: '2026',
+    image: '/projects/yummyverse.jpg',
+    summary: 'A recipe discovery site for exploring dishes from around the world, from Japanese sushi and ramen to everyday family meals.',
+    features: ['Recipe search', 'Browse recipes by cuisine and category', 'Save favourites', 'User login and register'],
+    tags: ['Web App', 'Content', 'UI Design'],
+  },
+  {
+    title: 'RBC Academy',
+    type: 'Admin dashboard',
+    year: '2026',
+    image: '/projects/rbc-academy.jpg',
+    summary: 'Admin panel for RBC Academy to run its membership and training programs, with live stats on members, programs and issued certificates.',
+    features: ['Member and instructor management', 'Programs, events and assessments', 'Certificate issuing', 'Growth and gender analytics'],
+    tags: ['Dashboard', 'Analytics', 'LMS'],
+  },
+  {
+    title: 'Katalis',
+    type: 'Partnership platform',
+    year: '2026',
+    image: '/projects/katalis.jpg',
+    summary: "Turns companies' social commitments into measurable impact by connecting them with relevant community programs in one collaboration ecosystem.",
+    features: ['Partnership portal for companies', 'Program catalog and governance flow', 'Impact tracking aligned with SDGs', 'Companion mobile workspace'],
+    tags: ['Web + Mobile', 'CSR', 'Impact'],
+  },
+  {
+    title: 'K-sirku',
+    type: 'Monitoring dashboard',
+    year: '2026',
+    image: '/projects/k-sirku.jpg',
+    summary: 'Command center for Rumah BUMN Cirebon to monitor the revenue and growth of the small businesses (UMKM) it mentors.',
+    features: ['Aggregate revenue trends', 'Growth, stable and declining status per UMKM', 'UMKM approval and product catalog', 'Business sector breakdown'],
+    tags: ['Dashboard', 'Monitoring', 'UMKM'],
+  },
 ]
 
 export const skills = [
